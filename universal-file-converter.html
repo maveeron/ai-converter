@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Universal File Converter Pro</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f4f1;--surf:#fff;--ink:#16243a;--mute:#5d6b7d;--line:#d5dbd6;--acc:#0e7490;--acc-ink:#fff;--ok:#2f7d4f;--bad:#b42318;--warn:#a15c07;--grid:rgba(14,116,144,.07);color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1621;--surf:#16212f;--ink:#e6edf5;--mute:#93a3b6;--line:#27364a;--acc:#4cc2dc;--acc-ink:#07212a;--ok:#5cc58a;--bad:#ff8a7a;--warn:#e9b25a;--grid:rgba(76,194,220,.07);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1621;--surf:#16212f;--ink:#e6edf5;--mute:#93a3b6;--line:#27364a;--acc:#4cc2dc;--acc-ink:#07212a;--ok:#5cc58a;--bad:#ff8a7a;--warn:#e9b25a;--grid:rgba(76,194,220,.07);color-scheme:dark}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px;color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,sans-serif;display:flex;min-height:100vh}
+nav{width:210px;flex:none;background:var(--surf);border-right:1px solid var(--line);padding:18px 12px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:4px}
+nav h1{font-size:16px;margin:0 8px 14px;font-weight:600;line-height:1.25}nav h1 small{display:block;color:var(--mute);font-weight:400;font-size:12px}
+nav button{all:unset;cursor:pointer;padding:8px 10px;border-radius:6px;color:var(--mute)}
+nav button:hover{background:var(--bg)}nav button[aria-current=true]{background:var(--acc);color:var(--acc-ink);font-weight:500}
+nav .sp{flex:1}
+main{flex:1;min-width:0;padding:22px 26px 40px;max-width:1100px}
+h2{font-size:22px;margin:0 0 4px;font-weight:600}h3{font-size:15px;margin:0 0 10px;font-weight:600}
+.sub{color:var(--mute);margin:0 0 18px;max-width:70ch}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--surf);color:var(--ink);padding:7px 14px;border-radius:6px}
+.btn.p{background:var(--acc);color:var(--acc-ink);border-color:var(--acc);font-weight:500}.btn:disabled{opacity:.45;cursor:not-allowed}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:18px}
+.kpi{all:unset;cursor:pointer;background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.kpi:hover{border-color:var(--acc)}.kpi b{display:block;font:500 24px "IBM Plex Mono",monospace}.kpi span{color:var(--mute);font-size:13px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-bottom:18px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:8px;padding:14px 16px}
+.bar{display:grid;grid-template-columns:70px 1fr 34px;gap:8px;align-items:center;font-size:13px;margin:5px 0}
+.bar i{display:block;height:10px;background:var(--acc);border-radius:2px;min-width:2px}.bar em{font:normal 12px "IBM Plex Mono",monospace;color:var(--mute);text-align:right}
+.drop{border:2px dashed var(--line);border-radius:10px;padding:30px;text-align:center;background:var(--surf);cursor:pointer}
+.drop.over{border-color:var(--acc);background:var(--grid)}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line)}th{color:var(--mute);font-weight:500;font-size:13px}
+.wrap{overflow-x:auto}
+.tag{font:12px "IBM Plex Mono",monospace;padding:1px 7px;border-radius:4px;border:1px solid var(--line)}
+.done{color:var(--ok)}.failed{color:var(--bad)}.processing{color:var(--warn)}.ready{color:var(--mute)}
+select,input[type=search]{font:inherit;background:var(--surf);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:6px 8px}
+.item{display:grid;grid-template-columns:1fr auto;gap:8px 14px;padding:12px 0;border-bottom:1px solid var(--line)}
+.note{font-size:13px;color:var(--mute);grid-column:1/-1}.note.w{color:var(--warn)}.note.f{color:var(--bad)}
+.empty{padding:28px;text-align:center;color:var(--mute)}
+@media(max-width:700px){body{display:block}nav{width:auto;height:auto;position:static;flex-direction:row;flex-wrap:wrap;border-right:0;border-bottom:1px solid var(--line)}nav h1{width:100%}nav .sp{display:none}main{padding:16px}}
+</style>
+</head>
+<body>
+<nav>
+<h1>Universal File Converter Pro<small>Runs in your browser</small></h1>
+<button data-v="dash">Dashboard</button><button data-v="conv">Convert files</button><button data-v="lib">File library</button><button data-v="reg">Formats and engines</button>
+<span class="sp"></span><button id="theme">Switch theme</button>
+</nav>
+<main id="app"></main>
+<script>
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const CAT={png:'Image',jpg:'Image',webp:'Image',bmp:'Image',gif:'Image',svg:'Image',tiff:'Image',ico:'Image',pdf:'Document',docx:'Document',doc:'Document',txt:'Document',rtf:'Document',html:'Document',md:'Document',odt:'Document',epub:'Document',xlsx:'Data',xls:'Data',csv:'Data',tsv:'Data',ods:'Data',json:'Data',xml:'Data',pptx:'Presentation',ppt:'Presentation',odp:'Presentation',dwg:'CAD/BIM',dxf:'CAD/BIM',rvt:'CAD/BIM',ifc:'CAD/BIM',skp:'CAD/BIM',obj:'3D',stl:'3D',glb:'3D',step:'3D',mp4:'Media',mov:'Media',webm:'Media',wav:'Media',mp3:'Media',flac:'Media'};
+// Registry: from, to, engine, mode (browser function name, or null = needs external engine), note
+const REG=[];const add=(f,t,eng,mode,note='',remote=false)=>REG.push({f,t,eng,mode,note,remote});const avail=r=>!!r.mode&&(!r.remote||!!S.engine);
+['png','jpg','webp','bmp','gif','svg'].forEach(f=>{['png','jpg','webp'].forEach(t=>f!==t&&add(f,t,'Browser canvas','img',t==='jpg'?'JPG has no transparency; transparent areas become white.':''));add(f,'pdf','Built-in PDF writer','imgpdf','Embeds the image as one page. No text layer.')});
+add('csv','json','Built-in parser','csv2json','First row is used as field names.');add('csv','tsv','Built-in parser','csv2tsv');add('tsv','csv','Built-in parser','tsv2csv');add('tsv','json','Built-in parser','tsv2json');
+add('json','csv','Built-in parser','json2csv','Input must be an array of objects. Nested values are stored as JSON text.');add('json','xml','Built-in writer','json2xml');
+add('md','html','Built-in Markdown subset','md2html','Supports headings, emphasis, links, lists, code. Tables are not converted.');add('md','txt','Built-in','md2txt');add('html','txt','Browser DOM parser','html2txt','Layout and images are dropped.');add('txt','html','Built-in','txt2html');
+[['pdf','docx','LibreOffice or a PDF API','Layout rebuilt from text; scanned PDFs need OCR.'],['docx','pdf','LibreOffice headless'],['docx','txt','LibreOffice headless'],['xlsx','csv','Server spreadsheet engine','Only one sheet exported; formulas become values.'],['xlsx','pdf','LibreOffice headless'],['pptx','pdf','LibreOffice headless'],['tiff','png','Server image engine (libvips/ImageMagick)','Browsers cannot decode TIFF.'],
+['pdf','dxf','Vector extraction; OCR and line recognition for scans','Scanned drawings need manual correction after recognition.'],
+['rvt','ifc','Revit + Autodesk APS Design Automation','Needs Autodesk credentials. BIM properties transfer only as the export workflow allows.'],['rvt','dwg','Revit + Autodesk APS Design Automation','Needs Autodesk credentials.'],['ifc','glb','IfcConvert (IfcOpenShell)','Geometry only; BIM intelligence is not kept.'],
+['obj','stl','trimesh or Assimp worker','Only valid for closed, printable geometry.'],['glb','obj','trimesh or Assimp worker'],['mp4','webm','FFmpeg worker'],['mp4','gif','FFmpeg worker'],['wav','mp3','FFmpeg worker']].forEach(r=>add(r[0],r[1],r[2],null,r[3]||''));
+const DN='Draws lines, polylines, arcs, circles, ellipses, splines (approximated) and text. Blocks, hatches and dimensions are skipped. Layers and colors are flattened.';
+add('dxf','svg','Built-in DXF renderer','dxf2svg',DN);add('dxf','pdf','Built-in DXF renderer','dxf2pdf','Vector PDF fit to one page. '+DN);add('dxf','png','Built-in DXF renderer','dxf2png','Raster preview. '+DN);
+add('dxf','dwg','ODA File Converter via engine server','remote','Needs an engine server with an ODA license.',true);add('dwg','dxf','ODA or LibreDWG via engine server','remote','Needs an engine server.',true);
+add('dwg','svg','Engine server (DWG to DXF) + built-in renderer','dwg2svg',DN,true);add('dwg','pdf','Engine server (DWG to DXF) + built-in renderer','dwg2pdf',DN,true);
+const norm=e=>({jpeg:'jpg',tif:'tiff',stp:'step',igs:'iges'}[e]||e);
+const ext=n=>norm((n.split('.').pop()||'').toLowerCase());
+const targets=e=>REG.filter(r=>r.f===e);
+// Real state
+let recs=[];try{recs=JSON.parse(localStorage.getItem('ufc')||'[]')}catch(e){}
+const save=()=>{try{localStorage.setItem('ufc',JSON.stringify(recs.slice(-2000)))}catch(e){}};
+const blobs=new Map(),outs=new Map();
+const S={engine:(()=>{try{return localStorage.getItem('ufc_engine')||''}catch(e){return ''}})(),v:'dash',q:'',st:'',page:0,cat:'',opts:{quality:.9,scale:100}};
+const fmt=b=>b<1024?b+' B':b<1048576?(b/1024).toFixed(1)+' KB':(b/1048576).toFixed(1)+' MB';
+const MAX=100*1048576;
+async function detect(f){const b=new Uint8Array(await f.slice(0,2048).arrayBuffer());const h=(...a)=>a.every((x,i)=>b[i]===x);
+if(h(137,80,78,71))return'png';if(h(255,216,255))return'jpg';if(h(71,73,70,56))return'gif';if(h(66,77))return'bmp';if(h(37,80,68,70))return'pdf';
+if(h(82,73,70,70)&&b[8]===87&&b[9]===69)return'webp';if(h(73,73,42,0)||h(77,77,0,42))return'tiff';if(h(80,75,3,4))return'zip';
+if(h(65,67,49))return'dwg';if(h(0,0,1,0))return'ico';if(!b.includes(0))return'text';return'binary'}
+// Converters
+const loadImg=u=>new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error('The browser could not decode this image.'));i.src=u});
+async function canvasOf(file,bg){const u=URL.createObjectURL(file);try{const i=await loadImg(u);const k=S.opts.scale/100;const w=Math.max(1,Math.round((i.naturalWidth||1024)*k)),h=Math.max(1,Math.round((i.naturalHeight||1024)*k));const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');if(bg){x.fillStyle='#fff';x.fillRect(0,0,w,h)}x.drawImage(i,0,0,w,h);return c}finally{URL.revokeObjectURL(u)}}
+const toBlob=(c,t,q)=>new Promise(r=>c.toBlob(r,t,q));
+function pdfFromJpeg(jpg,w,h){const pw=w*.75,ph=h*.75,enc=s=>new TextEncoder().encode(s),parts=[],offs=[];let len=0;const push=b=>{parts.push(b);len+=b.length};push(enc('%PDF-1.4\n'));
+const obj=(n,head,st)=>{offs[n]=len;push(enc(n+' 0 obj\n'+head));if(st){push(enc('\nstream\n'));push(st);push(enc('\nendstream'))}push(enc('\nendobj\n'))};
+obj(1,'<</Type/Catalog/Pages 2 0 R>>');obj(2,'<</Type/Pages/Kids[3 0 R]/Count 1>>');obj(3,`<</Type/Page/Parent 2 0 R/MediaBox[0 0 ${pw} ${ph}]/Resources<</XObject<</Im0 4 0 R>>>>/Contents 5 0 R>>`);
+obj(4,`<</Type/XObject/Subtype/Image/Width ${w}/Height ${h}/ColorSpace/DeviceRGB/BitsPerComponent 8/Filter/DCTDecode/Length ${jpg.length}>>`,jpg);
+const c=`q ${pw} 0 0 ${ph} 0 0 cm /Im0 Do Q`;obj(5,`<</Length ${c.length}>>`,enc(c));
+const x=len;let t='xref\n0 6\n0000000000 65535 f \n';for(let i=1;i<=5;i++)t+=String(offs[i]).padStart(10,'0')+' 00000 n \n';t+=`trailer\n<</Size 6/Root 1 0 R>>\nstartxref\n${x}\n%%EOF`;push(enc(t));return new Blob(parts,{type:'application/pdf'})}
+function parseCSV(t,d){const rows=[];let r=[],c='',q=false;for(let i=0;i<t.length;i++){const ch=t[i];if(q){if(ch==='"'){if(t[i+1]==='"'){c+='"';i++}else q=false}else c+=ch}else if(ch==='"')q=true;else if(ch===d){r.push(c);c=''}else if(ch==='\n'||ch==='\r'){if(ch==='\r'&&t[i+1]==='\n')i++;r.push(c);rows.push(r);r=[];c=''}else c+=ch}
+if(c!==''||r.length){r.push(c);rows.push(r)}return rows.filter(x=>x.some(v=>v!==''))}
+const cell=(v,d)=>{v=v==null?'':typeof v==='object'?JSON.stringify(v):String(v);return v.includes(d)||/["\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
+const toObjs=rows=>{if(rows.length<1)throw new Error('The file has no rows.');const h=rows[0];return rows.slice(1).map(r=>Object.fromEntries(h.map((k,i)=>[k,r[i]??''])))};
+const xmlName=k=>String(k).replace(/[^\w.-]/g,'_').replace(/^(\d)/,'_$1');
+const xml=(v,n)=>Array.isArray(v)?v.map(x=>xml(x,'item')).join(''):v&&typeof v==='object'?`<${n}>${Object.entries(v).map(([k,x])=>xml(x,xmlName(k))).join('')}</${n}>`:`<${n}>${esc(v)}</${n}>`;
+function md2html(t){const inl=s=>esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>').replace(/\*([^*]+)\*/g,'<em>$1</em>').replace(/\[([^\]]+)\]\((https?:[^)\s]+)\)/g,'<a href="$2">$1</a>');
+let out=[],list=null,code=false;const close=()=>{if(list){out.push(`</${list}>`);list=null}};
+for(const l of t.split(/\r?\n/)){if(l.startsWith('```')){close();out.push(code?'</pre>':'<pre>');code=!code;continue}if(code){out.push(esc(l));continue}
+let m;if(m=l.match(/^(#{1,6})\s+(.*)/)){close();out.push(`<h${m[1].length}>${inl(m[2])}</h${m[1].length}>`)}
+else if(m=l.match(/^\s*[-*]\s+(.*)/)){if(list!=='ul'){close();out.push('<ul>');list='ul'}out.push(`<li>${inl(m[1])}</li>`)}
+else if(m=l.match(/^\s*\d+\.\s+(.*)/)){if(list!=='ol'){close();out.push('<ol>');list='ol'}out.push(`<li>${inl(m[1])}</li>`)}
+else if(l.trim()===''){close()}else{close();out.push(`<p>${inl(l)}</p>`)}}close();return out.join('\n')}
+const text=f=>f.text();
+const CONV={
+async img(f,r){const to=r.t;const c=await canvasOf(f,to==='jpg');return toBlob(c,{png:'image/png',jpg:'image/jpeg',webp:'image/webp'}[to],S.opts.quality)},
+async imgpdf(f){const c=await canvasOf(f,true);const b=await toBlob(c,'image/jpeg',S.opts.quality);return pdfFromJpeg(new Uint8Array(await b.arrayBuffer()),c.width,c.height)},
+async csv2json(f){return new Blob([JSON.stringify(toObjs(parseCSV(await text(f),',')),null,2)],{type:'application/json'})},
+async tsv2json(f){return new Blob([JSON.stringify(toObjs(parseCSV(await text(f),'\t')),null,2)],{type:'application/json'})},
+async csv2tsv(f){return new Blob([parseCSV(await text(f),',').map(r=>r.map(v=>cell(v,'\t')).join('\t')).join('\n')],{type:'text/tab-separated-values'})},
+async tsv2csv(f){return new Blob([parseCSV(await text(f),'\t').map(r=>r.map(v=>cell(v,',')).join(',')).join('\n')],{type:'text/csv'})},
+async json2csv(f){let d;try{d=JSON.parse(await text(f))}catch(e){throw new Error('Invalid JSON: '+e.message)}if(!Array.isArray(d)||!d.every(x=>x&&typeof x==='object'))throw new Error('Expected a JSON array of objects.');const k=[...new Set(d.flatMap(Object.keys))];return new Blob([[k.map(x=>cell(x,',')).join(','),...d.map(o=>k.map(x=>cell(o[x],',')).join(','))].join('\n')],{type:'text/csv'})},
+async json2xml(f){let d;try{d=JSON.parse(await text(f))}catch(e){throw new Error('Invalid JSON: '+e.message)}return new Blob(['<?xml version="1.0" encoding="UTF-8"?>\n'+xml(d,'root')],{type:'application/xml'})},
+async md2html(f){return new Blob(['<!DOCTYPE html><meta charset="utf-8">\n'+md2html(await text(f))],{type:'text/html'})},
+async md2txt(f){return new Blob([(await text(f)).replace(/^#{1,6}\s+/gm,'').replace(/(\*\*|\*|`)/g,'')],{type:'text/plain'})},
+async html2txt(f){const d=new DOMParser().parseFromString(await text(f),'text/html');d.querySelectorAll('script,style').forEach(n=>n.remove());return new Blob([d.body.textContent.replace(/\n{3,}/g,'\n\n').trim()],{type:'text/plain'})},
+async txt2html(f){return new Blob(['<!DOCTYPE html><meta charset="utf-8">\n'+(await text(f)).split(/\n{2,}/).map(p=>`<p>${esc(p)}</p>`).join('\n')],{type:'text/html'})}};
+let NOTE='';
+const gv=(p,c)=>{const a=p.find(x=>x[0]===c);return a&&a[1]},nv=(p,c)=>+(gv(p,c)||0),al=(p,c)=>p.filter(x=>x[0]===c).map(x=>+x[1]);
+const arcPts=(cx,cy,r,a0,a1)=>{const n=Math.max(8,Math.ceil((a1-a0)/4));return Array.from({length:n+1},(_,i)=>{const a=(a0+(a1-a0)*i/n)*Math.PI/180;return[cx+r*Math.cos(a),cy+r*Math.sin(a)]})};
+function dxfGeo(t){
+if(/^AutoCAD Binary DXF/.test(t))throw new Error('Binary DXF is not supported. Save the drawing as ASCII DXF.');
+const L=t.split(/\r?\n/);while(L.length&&L[L.length-1].trim()==='')L.pop();const P=[];
+for(let i=0;i+1<L.length;i+=2){const c=parseInt(L[i],10);if(isNaN(c))throw new Error('Not a valid ASCII DXF file (bad group code on line '+(i+1)+').');P.push([c,L[i+1].trim()])}
+const ents=[];let inE=false,cur=null;
+for(let k=0;k<P.length;k++){const[c,v]=P[k];if(c===0&&v==='SECTION'){inE=!!P[k+1]&&P[k+1][1]==='ENTITIES';cur=null}else if(c===0&&v==='ENDSEC'){inE=false;cur=null}else if(inE){if(c===0){cur={t:v,p:[]};ents.push(cur)}else if(cur)cur.p.push([c,v])}}
+if(!ents.length)throw new Error('No ENTITIES section found. The file may be empty or not a DXF drawing.');
+const lines=[],texts=[],bad={};let ap=0,poly=null;
+for(const e of ents){const p=e.p;switch(e.t){
+case 'LINE':lines.push({pts:[[nv(p,10),nv(p,20)],[nv(p,11),nv(p,21)]]});break;
+case 'CIRCLE':lines.push({pts:arcPts(nv(p,10),nv(p,20),nv(p,40),0,360),closed:1});break;
+case 'ARC':{const a=nv(p,50);let b=nv(p,51);if(b<=a)b+=360;lines.push({pts:arcPts(nv(p,10),nv(p,20),nv(p,40),a,b)});break}
+case 'LWPOLYLINE':{const xs=al(p,10),ys=al(p,20);if(al(p,42).some(b=>b))ap++;lines.push({pts:xs.map((x,i)=>[x,ys[i]]),closed:nv(p,70)&1});break}
+case 'POLYLINE':poly={pts:[],closed:nv(p,70)&1};lines.push(poly);break;
+case 'VERTEX':if(poly)poly.pts.push([nv(p,10),nv(p,20)]);break;
+case 'SEQEND':poly=null;break;
+case 'ELLIPSE':{const mx=nv(p,11),my=nv(p,21),r=nv(p,40),s=nv(p,41),en=gv(p,42)===undefined?2*Math.PI:nv(p,42),cx=nv(p,10),cy=nv(p,20),pts=[];for(let i=0;i<=72;i++){const a=s+(en-s)*i/72;pts.push([cx+mx*Math.cos(a)-my*r*Math.sin(a),cy+my*Math.cos(a)+mx*r*Math.sin(a)])}lines.push({pts});break}
+case 'SPLINE':{const xs=al(p,10),ys=al(p,20);ap++;lines.push({pts:xs.map((x,i)=>[x,ys[i]])});break}
+case 'TEXT':case 'MTEXT':texts.push({x:nv(p,10),y:nv(p,20),h:nv(p,40)||1,s:(gv(p,1)||'').replace(/\\P/g,' ').replace(/\\[A-Za-z][^;]*;/g,'').replace(/[{}]/g,'')});break;
+default:bad[e.t]=(bad[e.t]||0)+1}}
+const ln=lines.filter(l=>l.pts.length>1&&l.pts.every(q=>isFinite(q[0])&&isFinite(q[1])));
+if(!ln.length&&!texts.length)throw new Error('No supported geometry found. Entity types present: '+(Object.keys(bad).join(', ')||'none')+'.');
+const sk=Object.entries(bad).map(([k,v])=>k+' ×'+v).join(', ');
+NOTE='Drew '+ln.length+' lines and '+texts.length+' text items.'+(sk?' Skipped: '+sk+'.':'')+(ap?' '+ap+' curved or spline entities are approximated.':'');
+return{ln,texts}}
+const mn=a=>a.reduce((m,v)=>v<m?v:m,Infinity),mx=a=>a.reduce((m,v)=>v>m?v:m,-Infinity);
+function dxfB(G){const xs=[],ys=[];G.ln.forEach(l=>l.pts.forEach(q=>{xs.push(q[0]);ys.push(q[1])}));G.texts.forEach(t=>{xs.push(t.x);ys.push(t.y)});const x0=mn(xs),y0=mn(ys);return{x0,y0,w:(mx(xs)-x0)||1,h:(mx(ys)-y0)||1}}
+function dxfSVG(G){const B=dxfB(G),pad=Math.max(B.w,B.h)*.04,vw=B.w+2*pad,vh=B.h+2*pad,sw=Math.max(B.w,B.h)/1000,vx=B.x0-pad,vy=-(B.y0+B.h)-pad;
+const pl=G.ln.map(l=>`<${l.closed?'polygon':'polyline'} points="${l.pts.map(q=>q[0].toFixed(3)+','+(-q[1]).toFixed(3)).join(' ')}"/>`).join('');
+const tx=G.texts.map(t=>`<text x="${t.x}" y="${-t.y}" font-size="${t.h}" font-family="sans-serif" fill="#111" stroke="none">${esc(t.s)}</text>`).join('');
+return`<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="${Math.round(1600*vh/vw)}" viewBox="${vx} ${vy} ${vw} ${vh}"><rect x="${vx}" y="${vy}" width="${vw}" height="${vh}" fill="#fff"/><g fill="none" stroke="#111" stroke-width="${sw}" stroke-linejoin="round">${pl}</g>${tx}</svg>`}
+function pdfVector(c,W,H){const enc=s=>new TextEncoder().encode(s),parts=[],offs=[];let len=0;const push=b=>{parts.push(b);len+=b.length};push(enc('%PDF-1.4\n'));const obj=(n,b)=>{offs[n]=len;push(enc(n+' 0 obj\n'+b+'\nendobj\n'))};
+obj(1,'<</Type/Catalog/Pages 2 0 R>>');obj(2,'<</Type/Pages/Kids[3 0 R]/Count 1>>');obj(3,`<</Type/Page/Parent 2 0 R/MediaBox[0 0 ${W} ${H}]/Resources<</Font<</F1 4 0 R>>>>/Contents 5 0 R>>`);obj(4,'<</Type/Font/Subtype/Type1/BaseFont/Helvetica>>');
+const by=enc(c);offs[5]=len;push(enc(`5 0 obj\n<</Length ${by.length}>>\nstream\n`));push(by);push(enc('\nendstream\nendobj\n'));
+const x=len;let t='xref\n0 6\n0000000000 65535 f \n';for(let i=1;i<=5;i++)t+=String(offs[i]).padStart(10,'0')+' 00000 n \n';t+=`trailer\n<</Size 6/Root 1 0 R>>\nstartxref\n${x}\n%%EOF`;push(enc(t));return new Blob(parts,{type:'application/pdf'})}
+function dxfPDF(G){const B=dxfB(G),land=B.w>=B.h,W=land?842:595,H=land?595:842,m=24,s=Math.min((W-2*m)/B.w,(H-2*m)/B.h),ox=(W-B.w*s)/2,oy=(H-B.h*s)/2,X=x=>((x-B.x0)*s+ox).toFixed(2),Y=y=>((y-B.y0)*s+oy).toFixed(2);
+let c='0.4 w 0 0 0 RG\n';G.ln.forEach(l=>{c+=l.pts.map((q,i)=>X(q[0])+' '+Y(q[1])+(i?' l':' m')).join('\n')+(l.closed?'\nh S\n':'\nS\n')});
+G.texts.forEach(t=>{const a=t.s.replace(/[^\x20-\x7e]/g,'').replace(/([\\()])/g,'\\$1');c+=`BT /F1 ${Math.max(t.h*s,2).toFixed(2)} Tf ${X(t.x)} ${Y(t.y)} Td (${a}) Tj ET\n`});return pdfVector(c,W,H)}
+async function remote(f,from,to){if(!S.engine)throw new Error('Set the engine URL on the Formats and engines page. DWG needs a running engine server.');let r;try{r=await fetch(S.engine+'/convert?from='+from+'&to='+to,{method:'POST',body:f})}catch(e){throw new Error('Could not reach the engine at '+S.engine+'. Pages hosted on claude.ai block outside requests; open the downloaded page file instead.')}
+if(!r.ok)throw new Error('Engine error: '+(await r.text()).slice(0,200));return r.blob()}
+Object.assign(CONV,{dxf2svg:async f=>new Blob([dxfSVG(dxfGeo(await f.text()))],{type:'image/svg+xml'}),dxf2pdf:async f=>dxfPDF(dxfGeo(await f.text())),
+async dxf2png(f){const u=URL.createObjectURL(new Blob([dxfSVG(dxfGeo(await f.text()))],{type:'image/svg+xml'}));try{const i=await loadImg(u),c=document.createElement('canvas');c.width=i.naturalWidth;c.height=i.naturalHeight;c.getContext('2d').drawImage(i,0,0);return toBlob(c,'image/png')}finally{URL.revokeObjectURL(u)}},
+remote:(f,r)=>remote(f,r.f,r.t),async dwg2svg(f){return CONV.dxf2svg(await remote(f,'dwg','dxf'))},async dwg2pdf(f){return CONV.dxf2pdf(await remote(f,'dwg','dxf'))}});
+const SIG={png:'png',jpg:'jpg',webp:'webp',pdf:'pdf',dwg:'dwg'};
+async function convert(id){const rec=recs.find(r=>r.id===id),f=blobs.get(id);if(!rec||!f||!rec.to)return;const reg=REG.find(r=>r.f===rec.ext&&r.t===rec.to);
+rec.status='processing';rec.msg='';render();const t0=performance.now();
+try{if(!reg||!reg.mode)throw new Error('No conversion engine is connected for '+rec.ext.toUpperCase()+' → '+rec.to.toUpperCase()+'.');
+NOTE='';const out=await CONV[reg.mode](f,reg);if(!out||!out.size)throw new Error('The engine produced an empty file.');
+if(SIG[rec.to]){const d=await detect(out);if(d!==SIG[rec.to])throw new Error('Output validation failed: file signature is '+d+'.')}
+if(rec.to==='dxf'&&!(await out.text()).includes('SECTION'))throw new Error('Output validation failed: not a DXF file.');if(rec.to==='svg'&&!(await out.text()).includes('<svg'))throw new Error('Output validation failed: not an SVG file.');
+outs.set(id,out);rec.status='done';rec.outSize=out.size;rec.msg=[reg.note,NOTE].filter(Boolean).join(' ')}catch(e){rec.status='failed';rec.msg=e.message}
+rec.ms=Math.round(performance.now()-t0);rec.ts=Date.now();save();render()}
+async function addFiles(list){for(const f of list){const e=ext(f.name);const rec={id:'f'+Date.now()+Math.random().toString(36).slice(2,6),name:f.name,ext:e,cat:CAT[e]||'Other',size:f.size,ts:Date.now(),status:'ready',to:'',ms:0,msg:''};
+if(f.size>MAX){rec.status='failed';rec.msg='Larger than the 100 MB limit.'}else if(f.size===0){rec.status='failed';rec.msg='The file is empty.'}
+else{const d=await detect(f);rec.det=d;const ok={jpg:'jpg',png:'png',webp:'webp',gif:'gif',bmp:'bmp',pdf:'pdf',tiff:'tiff',dwg:'dwg'};if(ok[d]&&ok[d]!==e&&!(d==='zip'))rec.msg='Content looks like '+d.toUpperCase()+', not '+e.toUpperCase()+'. Treating it as '+d.toUpperCase()+'.';if(ok[d]&&ok[d]!==e){rec.ext=ok[d];rec.cat=CAT[rec.ext]||'Other'}
+if(d==='dwg'){const v=await f.slice(0,6).text();rec.msg='DWG version '+(({AC1015:'2000',AC1018:'2004',AC1021:'2007',AC1024:'2010',AC1027:'2013',AC1032:'2018'})[v]||v)+'.'}
+if(['zip','binary'].includes(d)&&!CAT[e])rec.msg='Unknown format.';blobs.set(rec.id,f);
+const t=targets(rec.ext);if(t.length)rec.to=(t.find(x=>x.mode)||t[0]).t}
+recs.push(rec)}save();go('conv')}
+// Views
+const stat=(s)=>`<span class="${s}">${s}</span>`;
+const stats=()=>({total:recs.length,done:recs.filter(r=>r.status==='done').length,proc:recs.filter(r=>r.status==='processing').length,fail:recs.filter(r=>r.status==='failed').length,store:recs.reduce((a,r)=>a+r.size,0),ms:recs.reduce((a,r)=>a+(r.ms||0),0)});
+const bars=(m,title)=>{const e=Object.entries(m).sort((a,b)=>b[1]-a[1]).slice(0,6),mx=Math.max(1,...e.map(x=>x[1]));return`<div class="card"><h3>${title}</h3>${e.length?e.map(([k,v])=>`<div class="bar"><span>${esc(k)}</span><i style="width:${v/mx*100}%"></i><em>${v}</em></div>`).join(''):'<div class="empty">No data yet.</div>'}</div>`};
+function dash(){const s=stats(),dn=recs.filter(r=>r.status==='done');const cat={},pair={},day={};
+dn.forEach(r=>{cat[r.cat]=(cat[r.cat]||0)+1;const p=r.ext.toUpperCase()+' → '+r.to.toUpperCase();pair[p]=(pair[p]||0)+1});
+for(let i=6;i>=0;i--){const d=new Date(Date.now()-i*864e5);day[d.toLocaleDateString(undefined,{weekday:'short'})]=0}
+dn.forEach(r=>{const k=new Date(r.ts).toLocaleDateString(undefined,{weekday:'short'});if(k in day&&Date.now()-r.ts<7*864e5)day[k]++});
+const k=(n,l,f)=>`<button class="kpi" data-f="${f}"><b>${n}</b><span>${l}</span></button>`;
+return`<h2>Dashboard</h2><p class="sub">Every number here is computed from files you have uploaded and converted. History is kept in this browser only.</p>
+<div class="row" style="margin-bottom:16px"><button class="btn p" data-v="conv">Convert files</button><button class="btn" id="up">Upload files</button></div>
+<div class="kpis">${k(s.total,'Files uploaded','')}${k(s.done,'Successful conversions','done')}${k(s.proc,'Processing now','processing')}${k(s.fail,'Failed conversions','failed')}${k(fmt(s.store),'Storage used (originals)','')}${k((s.ms/1000).toFixed(1)+' s','Total processing time','')}</div>
+<div class="grid2">${bars(day,'Conversions, last 7 days')}${bars(cat,'Volume by category')}${bars(pair,'Most used conversions')}${bars({Successful:s.done,Failed:s.fail},'Successful vs failed')}</div>
+<h3>Recent files</h3>${table(recs.slice(-5).reverse())}`}
+function table(list){if(!list.length)return`<div class="card empty">No files yet. Upload a file to start converting.</div>`;
+return`<div class="wrap card"><table><tr><th>File</th><th>From → to</th><th>Size</th><th>Date</th><th>Status</th><th></th></tr>${list.map(r=>`<tr><td>${esc(r.name)}</td><td><span class="tag">${esc(r.ext)}</span> → <span class="tag">${esc(r.to||'?')}</span></td><td>${fmt(r.size)}</td><td>${new Date(r.ts).toLocaleString()}</td><td>${stat(r.status)}${r.status==='failed'?`<div class="note f">${esc(r.msg)}</div>`:''}</td><td>${outs.has(r.id)?`<button class="btn" data-dl="${r.id}">Download</button>`:r.status==='done'?'<span class="note">Re-upload to download</span>':''}</td></tr>`).join('')}</table></div>`}
+function conv(){const pend=recs.filter(r=>r.status==='ready').length;
+return`<h2>Convert files</h2><p class="sub">Drop files here. The file type is read from the file’s own bytes, then you pick a target. Formats marked “needs engine” cannot run in a browser.</p>
+<div class="drop" id="drop" tabindex="0" role="button">Drop files here or click to choose them<br><small class="note">Up to 100 MB each. Files stay in your browser.</small></div>
+<div class="card" style="margin:14px 0"><div class="row"><label>Image and PDF quality <input type="range" id="q" min="10" max="100" value="${S.opts.quality*100}"> <span id="qv">${Math.round(S.opts.quality*100)}%</span></label><label>Image scale <select id="sc">${[25,50,75,100,150,200].map(v=>`<option ${v===S.opts.scale?'selected':''}>${v}</option>`).join('')}</select>%</label><span class="sp" style="flex:1"></span><button class="btn p" id="all" ${pend?'':'disabled'}>Convert all (${pend})</button></div></div>
+<div class="card">${recs.length?recs.slice().reverse().filter(r=>blobs.has(r.id)||r.status==='failed').slice(0,30).map(item).join('')||'<div class="empty">Files from earlier sessions are in the library.</div>':'<div class="empty">Nothing queued. Add a file to see the formats it can become.</div>'}</div>`}
+function item(r){const t=targets(r.ext),sel=REG.find(x=>x.f===r.ext&&x.t===r.to);
+const opts=t.map(x=>`<option value="${x.t}" ${x.t===r.to?'selected':''}>${x.t.toUpperCase()}${avail(x)?'':' (needs engine)'}</option>`).join('');
+let note=r.msg?`<div class="note ${r.status==='failed'?'f':'w'}">${esc(r.msg)}</div>`:'';
+if(r.status==='ready'&&sel&&!avail(sel))note=`<div class="note f">Needs: ${esc(sel.eng)}. ${esc(sel.note)}${sel.remote&&!S.engine?' Set the engine URL on the Formats and engines page.':' Not connected in this build.'}</div>`;else if(r.status==='ready'&&sel&&sel.note)note=`<div class="note w">${esc(sel.note)}</div>`;
+if(!t.length&&r.status==='ready')note=`<div class="note f">No conversions are registered for .${esc(r.ext)} files.</div>`;
+return`<div class="item"><div><b>${esc(r.name)}</b> <span class="tag">${esc(r.ext)}</span> ${fmt(r.size)} ${stat(r.status)}${r.status==='done'?` <span class="note">→ ${fmt(r.outSize)} in ${r.ms} ms</span>`:''}</div>
+<div class="row">${r.status==='ready'||r.status==='failed'&&blobs.has(r.id)?`<select data-t="${r.id}">${opts}</select><button class="btn p" data-c="${r.id}" ${sel&&avail(sel)?'':'disabled'}>Convert</button>`:''}${outs.has(r.id)?`<button class="btn p" data-dl="${r.id}">Download</button>`:''}</div>${note}</div>`}
+function lib(){let l=recs.slice().reverse();const q=S.q.toLowerCase();
+if(S.st)l=l.filter(r=>r.status===S.st);if(q)l=l.filter(r=>[r.name,r.ext,r.to,r.cat,r.status,new Date(r.ts).toLocaleDateString()].join(' ').toLowerCase().includes(q));
+const pages=Math.max(1,Math.ceil(l.length/10));S.page=Math.min(S.page,pages-1);
+return`<h2>File library</h2><p class="sub">Search by name, extension, category, date or status.</p><div class="row" style="margin-bottom:12px"><input type="search" id="sq" placeholder="Search files" value="${esc(S.q)}"><select id="sf"><option value="">All statuses</option>${['ready','processing','done','failed'].map(s=>`<option ${S.st===s?'selected':''}>${s}</option>`).join('')}</select><button class="btn" id="clr">Clear history</button></div>${table(l.slice(S.page*10,S.page*10+10))}
+<div class="row" style="margin-top:10px"><button class="btn" data-pg="-1" ${S.page?'':'disabled'}>Previous</button><span>Page ${S.page+1} of ${pages}</span><button class="btn" data-pg="1" ${S.page<pages-1?'':'disabled'}>Next</button></div>`}
+function reg(){const g={};REG.forEach(r=>(g[r.f]=g[r.f]||[]).push(r));
+return`<h2>Formats and engines</h2><p class="sub">The registry lists every supported pair and what it needs. Browser pairs work now. Others need a server worker or a licensed engine, and are never reported as converted until a real output exists. For CAD and BIM, generic 3D conversion does not keep Revit families, parameters or element relationships, and scanned PDF to DWG needs manual cleanup.</p>
+<div class="card row" style="margin-bottom:12px"><label>DWG engine server <input type="text" id="eng" value="${esc(S.engine)}" placeholder="http://localhost:8787" size="30"></label><span class="note">Needed for DWG and for DXF to DWG. Run engine-server.js on your machine. Pages on claude.ai cannot reach outside servers, so open the downloaded page file to use it.</span></div><div class="wrap card"><table><tr><th>From</th><th>To</th><th>Engine</th><th>Status</th><th>Limitations</th></tr>${REG.map(r=>`<tr><td>${r.f.toUpperCase()}</td><td>${r.t.toUpperCase()}</td><td>${esc(r.eng)}</td><td>${avail(r)?'<span class="done">available</span>':'<span class="processing">needs engine'+(r.remote?' server':'')+'</span>'}</td><td>${esc(r.note)}</td></tr>`).join('')}</table></div>
+<p class="note">Not yet in the registry: DOC, RTF, ODT, EPUB, ODS, XLS, PPT, ODP, ICO, DWF, RFA, RTE, SKP, STEP, IGES, FBX, 3DM, MOV, AVI, FLAC, AAC.</p>`}
+const V={dash,conv,lib,reg};
+function render(){const y=window.scrollY;$('#app').innerHTML=V[S.v]();document.querySelectorAll('nav [data-v]').forEach(b=>b.setAttribute('aria-current',b.dataset.v===S.v));
+const d=$('#drop');if(d){const inp=document.createElement('input');inp.type='file';inp.multiple=true;inp.onchange=()=>addFiles(inp.files);d.onclick=()=>inp.click();d.onkeydown=e=>e.key==='Enter'&&inp.click();
+d.ondragover=e=>{e.preventDefault();d.classList.add('over')};d.ondragleave=()=>d.classList.remove('over');d.ondrop=e=>{e.preventDefault();d.classList.remove('over');addFiles(e.dataTransfer.files)}}
+window.scrollTo(0,y)}
+function go(v,f){S.v=v;S.page=0;if(f!==undefined)S.st=f;render()}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-v],[data-f],[data-c],[data-dl],[data-pg],#up,#all,#clr,#theme');if(!t)return;
+if(t.dataset.f!==undefined)return go('lib',t.dataset.f);if(t.dataset.v)return go(t.dataset.v,'');
+if(t.id==='up'){const i=document.createElement('input');i.type='file';i.multiple=true;i.onchange=()=>addFiles(i.files);i.click()}
+if(t.dataset.c)convert(t.dataset.c);if(t.id==='all')recs.filter(r=>r.status==='ready'&&REG.find(x=>x.f===r.ext&&x.t===r.to&&avail(x))).reduce((p,r)=>p.then(()=>convert(r.id)),Promise.resolve());
+if(t.dataset.dl){const o=outs.get(t.dataset.dl),r=recs.find(x=>x.id===t.dataset.dl),a=document.createElement('a');a.href=URL.createObjectURL(o);a.download=r.name.replace(/\.[^.]+$/,'')+'.'+r.to;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1e4)}
+if(t.dataset.pg){S.page+=+t.dataset.pg;render()}
+if(t.id==='clr'){recs=[];blobs.clear();outs.clear();save();render()}
+if(t.id==='theme'){const r=document.documentElement,dk=matchMedia('(prefers-color-scheme:dark)').matches,cur=r.dataset.theme||(dk?'dark':'light');r.dataset.theme=cur==='dark'?'light':'dark'}});
+document.addEventListener('change',e=>{const t=e.target;if(t.id==='eng'){S.engine=t.value.trim().replace(/\/$/,'');try{localStorage.setItem('ufc_engine',S.engine)}catch(x){}render()}if(t.dataset.t){recs.find(r=>r.id===t.dataset.t).to=t.value;save();render()}if(t.id==='sf'){S.st=t.value;S.page=0;render()}if(t.id==='sc')S.opts.scale=+t.value});
+document.addEventListener('input',e=>{if(e.target.id==='q'){S.opts.quality=e.target.value/100;$('#qv').textContent=e.target.value+'%'}if(e.target.id==='sq'){S.q=e.target.value;S.page=0;const p=e.target.selectionStart;render();const n=$('#sq');n.focus();n.setSelectionRange(p,p)}});
+recs.forEach(r=>{if(r.status==='processing')r.status='failed',r.msg='Interrupted by a page reload.'});
+render();
+</script>
+</body>
+</html>
